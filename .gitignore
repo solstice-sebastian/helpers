@@ -1,0 +1,10 @@
+node_modules/
+private/
+local/
+.env
+.vscode/
+yarn.lock
+logs/
+*.log
+*.zip
+data/
