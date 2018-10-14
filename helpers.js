@@ -116,6 +116,16 @@ const Helpers = () => {
 
   const toSatoshi = (number) => +(+number * 0.00000001).toFixed(8);
 
+  const getDecimalPlaces = (num) => {
+    const parts = num.toString().split('.');
+    if (parts.length > 1) {
+      const afterDecimal = parts[1];
+      const indexOfOne = afterDecimal.indexOf('1') + 1;
+      return indexOfOne;
+    }
+    return 0; // whole number
+  }
+
   return {
     modByPercent,
     getPercentDiff,
@@ -131,6 +141,7 @@ const Helpers = () => {
     toSatoshi,
     safeJson,
     rand,
+    getDecimalPlaces
   };
 };
 
