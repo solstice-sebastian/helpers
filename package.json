@@ -7,7 +7,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "tape-watch tests/*.js tests/**/*.js | faucet",
+    "test": "tape-watch tests/**/*.js | faucet",
     "build": "tsc"
   },
   "keywords": [],

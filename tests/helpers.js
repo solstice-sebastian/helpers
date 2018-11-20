@@ -1,9 +1,16 @@
-const Helpers = require('../helpers.js');
 const Constants = require('@solstice.sebastian/constants');
 const test = require('tape');
+const {
+  modByPercent,
+  nicePercent,
+  getPercentDiff,
+  toQueryString,
+  validateRequired,
+  msToDatetime,
+  toSatoshi,
+} = require('../dist/index.js');
 
 test(`modByPercent`, (assert) => {
-  const { modByPercent } = Helpers();
   assert.equal(modByPercent(42, 0.02, 2), 42.84, 'should increase by percent');
   assert.equal(modByPercent(42, -0.02, 2), 41.16, 'should descrease by percent');
   const posFloat = 42.123432;
@@ -13,7 +20,6 @@ test(`modByPercent`, (assert) => {
 });
 
 test(`getPercentDiff`, (assert) => {
-  const { getPercentDiff } = Helpers();
   assert.equal(getPercentDiff(42, 42.84, 2), 0.02, 'should return percent increase as float');
   assert.equal(getPercentDiff(42, 41.28, 2), -0.02, 'should return percent descrease as float');
   assert.equal(getPercentDiff(0.00083, 0.00099, 2), 0.19, 'should work on fractions: increase');
@@ -22,7 +28,6 @@ test(`getPercentDiff`, (assert) => {
 });
 
 test(`nicePercent`, (assert) => {
-  const { nicePercent } = Helpers();
   const p = 0.12345678;
   assert.equal(nicePercent(p), '12.35%', 'should default to 2 places and round');
   assert.equal(nicePercent(p, 0), '12%', 'should take places param');
@@ -31,7 +36,6 @@ test(`nicePercent`, (assert) => {
 });
 
 test(`toQueryString`, (assert) => {
-  const { toQueryString } = Helpers();
   const input = {
     key1: 'val1',
     key2: 'val2',
@@ -47,7 +51,6 @@ test(`toQueryString`, (assert) => {
 });
 
 test(`validateRequired`, (assert) => {
-  const { validateRequired } = Helpers();
   const required = {
     key1: {
       type: 'string',
@@ -88,7 +91,6 @@ test(`validateRequired`, (assert) => {
 });
 
 test(`toSatoshi`, (assert) => {
-  const { toSatoshi } = Helpers();
   assert.equal(toSatoshi(391), 0.00000391);
   assert.equal(toSatoshi(100), Constants.ONE_HUNDRED_SHATOSHIS);
   assert.equal(toSatoshi(1), Constants.ONE_SHATOSI);
@@ -96,7 +98,6 @@ test(`toSatoshi`, (assert) => {
 });
 
 test(`msToDatetime`, (assert) => {
-  const { msToDatetime } = Helpers();
   assert.true(msToDatetime(Date.now()), 'can format for timezone');
   assert.end();
 });
