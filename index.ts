@@ -43,7 +43,7 @@ const globDelete = (globStr: string): Promise<any> =>
     });
   });
 
-const noop = (args: any): any => {};
+const noop = (args?: any): any => {};
 
 const datetimeForFilename = (): string => moment().format(DATETIME_FILENAME);
 const datetime = (): string => moment().format(DATETIME);
