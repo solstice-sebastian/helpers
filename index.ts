@@ -113,6 +113,23 @@ const getDecimalPlaces = (num: number): number => {
   return 0; // whole number
 }
 
+const isEqualPrice = (a: number | string, b: number | string): boolean => {
+  if (Number.isNaN(+a) || Number.isNaN(+b)) {
+    console.log(`isEqualPrice received NaN`);
+    return false;
+  }
+
+  if (typeof a !== 'number' && typeof a !== 'string') {
+    throw Error(`isEqualPrice expected number|string but received ${typeof a}`);
+  }
+
+  if (typeof b !== 'number' && typeof b !== 'string') {
+    throw Error(`isEqualPrice expected number|string but received ${typeof b}`);
+  }
+
+  return parseFloat(`${a}`).toFixed(8) === parseFloat(`${b}`).toFixed(8);
+};
+
 export {
   modByPercent,
   getPercentDiff,
@@ -128,5 +145,6 @@ export {
   toSatoshi,
   safeJson,
   rand,
-  getDecimalPlaces
+  getDecimalPlaces,
+  isEqualPrice
 };

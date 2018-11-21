@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "tsc --watch",
     "test": "tape-watch tests/**/*.js | faucet",
     "build": "tsc"
   },

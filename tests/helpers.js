@@ -8,49 +8,50 @@ const {
   validateRequired,
   msToDatetime,
   toSatoshi,
+  isEqualPrice,
 } = require('../dist/index.js');
 
-test(`modByPercent`, (assert) => {
-  assert.equal(modByPercent(42, 0.02, 2), 42.84, 'should increase by percent');
-  assert.equal(modByPercent(42, -0.02, 2), 41.16, 'should descrease by percent');
+test(`modByPercent`, (t) => {
+  t.equal(modByPercent(42, 0.02, 2), 42.84, 'should increase by percent');
+  t.equal(modByPercent(42, -0.02, 2), 41.16, 'should descrease by percent');
   const posFloat = 42.123432;
-  assert.equal(modByPercent(posFloat, 0.02, 2), 42.97, 'should increase by percent');
-  assert.equal(modByPercent(posFloat, -0.02, 2), 41.28, 'should descrease by percent');
-  assert.end();
+  t.equal(modByPercent(posFloat, 0.02, 2), 42.97, 'should increase by percent');
+  t.equal(modByPercent(posFloat, -0.02, 2), 41.28, 'should descrease by percent');
+  t.end();
 });
 
-test(`getPercentDiff`, (assert) => {
-  assert.equal(getPercentDiff(42, 42.84, 2), 0.02, 'should return percent increase as float');
-  assert.equal(getPercentDiff(42, 41.28, 2), -0.02, 'should return percent descrease as float');
-  assert.equal(getPercentDiff(0.00083, 0.00099, 2), 0.19, 'should work on fractions: increase');
-  assert.equal(getPercentDiff(0.00099, 0.00083, 2), -0.16, 'should work on fractions: decrease');
-  assert.end();
+test(`getPercentDiff`, (t) => {
+  t.equal(getPercentDiff(42, 42.84, 2), 0.02, 'should return percent increase as float');
+  t.equal(getPercentDiff(42, 41.28, 2), -0.02, 'should return percent descrease as float');
+  t.equal(getPercentDiff(0.00083, 0.00099, 2), 0.19, 'should work on fractions: increase');
+  t.equal(getPercentDiff(0.00099, 0.00083, 2), -0.16, 'should work on fractions: decrease');
+  t.end();
 });
 
-test(`nicePercent`, (assert) => {
+test(`nicePercent`, (t) => {
   const p = 0.12345678;
-  assert.equal(nicePercent(p), '12.35%', 'should default to 2 places and round');
-  assert.equal(nicePercent(p, 0), '12%', 'should take places param');
-  assert.equal(nicePercent(p, 3), '12.346%', 'should take places param');
-  assert.end();
+  t.equal(nicePercent(p), '12.35%', 'should default to 2 places and round');
+  t.equal(nicePercent(p, 0), '12%', 'should take places param');
+  t.equal(nicePercent(p, 3), '12.346%', 'should take places param');
+  t.end();
 });
 
-test(`toQueryString`, (assert) => {
+test(`toQueryString`, (t) => {
   const input = {
     key1: 'val1',
     key2: 'val2',
   };
   const expected = 'key1=val1&key2=val2';
-  assert.equal(toQueryString(input), expected);
-  assert.equal(
+  t.equal(toQueryString(input), expected);
+  t.equal(
     toQueryString(Object.assign({}, input, { bogus: undefined })),
     expected,
     'should not add empty vals'
   );
-  assert.end();
+  t.end();
 });
 
-test(`validateRequired`, (assert) => {
+test(`validateRequired`, (t) => {
   const required = {
     key1: {
       type: 'string',
@@ -75,29 +76,51 @@ test(`validateRequired`, (assert) => {
     key3: 6,
     key4: false,
   };
-  assert.equal(validateRequired(required, params).length, 3, 'should return 3 errors');
-  assert.equal(
+  t.equal(validateRequired(required, params).length, 3, 'should return 3 errors');
+  t.equal(
     validateRequired(required, params).every((error) => error.constructor === Error),
     true,
     'should return Errors'
   );
-  assert.equal(
+  t.equal(
     validateRequired(required, validParams).length,
     0,
     'should return empty array when valid'
   );
-  assert.throws(() => validateRequired(required, params, true), 'should throw when flag set');
-  assert.end();
+  t.throws(() => validateRequired(required, params, true), 'should throw when flag set');
+  t.end();
 });
 
-test(`toSatoshi`, (assert) => {
-  assert.equal(toSatoshi(391), 0.00000391);
-  assert.equal(toSatoshi(100), Constants.ONE_HUNDRED_SHATOSHIS);
-  assert.equal(toSatoshi(1), Constants.ONE_SHATOSI);
-  assert.end();
+test(`toSatoshi`, (t) => {
+  t.equal(toSatoshi(391), 0.00000391);
+  t.equal(toSatoshi(100), Constants.ONE_HUNDRED_SHATOSHIS);
+  t.equal(toSatoshi(1), Constants.ONE_SHATOSI);
+  t.end();
 });
 
-test(`msToDatetime`, (assert) => {
-  assert.true(msToDatetime(Date.now()), 'can format for timezone');
-  assert.end();
+test(`msToDatetime`, (t) => {
+  t.true(msToDatetime(Date.now()), 'can format for timezone');
+  t.end();
+});
+
+test.only(`isEqualPrice`, (t) => {
+  t.true(isEqualPrice(4, 4));
+  t.true(isEqualPrice('4', '4'));
+  t.true(isEqualPrice(4, '4'));
+  t.true(isEqualPrice(4.0492, 4.0492));
+  t.true(isEqualPrice(4.123456782, 4.123456783));
+  t.true(isEqualPrice('4.123456782', '4.123456783'));
+
+  t.false(isEqualPrice(3, 4));
+  t.false(isEqualPrice('4', 2));
+  t.false(isEqualPrice(NaN, NaN));
+  t.throws(() => {
+    isEqualPrice(true, true);
+  });
+  t.throws(() => {
+    isEqualPrice(false, false);
+  });
+  t.false(isEqualPrice(4.123456782, 4.123456789));
+  t.false(isEqualPrice('4.123456782', '4.123456789'));
+  t.end();
 });
