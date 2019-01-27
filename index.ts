@@ -1,7 +1,7 @@
 import moment from 'moment-timezone';
 import glob from 'glob';
 import fs from 'fs';
-import { DATETIME, DATETIME_FILENAME } from '@solstice.sebastian/constants';
+import { DATETIME, DATETIME_FILENAME, MomentTimeInterval } from '@solstice.sebastian/constants';
 
 /**
  * @param price {Number}
@@ -130,6 +130,31 @@ const isEqualPrice = (a: number | string, b: number | string): boolean => {
   return parseFloat(`${a}`).toFixed(8) === parseFloat(`${b}`).toFixed(8);
 };
 
+
+export interface FBTIArgs {
+  data: { [key: string]: any }[];
+  datetimeKey: string;
+  intervalKey: MomentTimeInterval;
+  intervalStep: number;
+}
+const filterByTimeInterval = ({ data, datetimeKey, intervalKey, intervalStep = 1 }: FBTIArgs) => {
+  let nextStepMoment: any;
+  return data.filter((datum) => {
+    const datumMoment = moment(datum[datetimeKey]);
+    if (!nextStepMoment) {
+      nextStepMoment = datumMoment.add(intervalStep, intervalKey);
+      return true;
+    }
+
+    if (datumMoment.valueOf() > nextStepMoment.valueOf()) {
+      nextStepMoment.add(intervalStep, intervalKey);
+      return true;
+    }
+
+    return false;
+  });
+};
+
 export {
   modByPercent,
   getPercentDiff,
@@ -146,5 +171,6 @@ export {
   safeJson,
   rand,
   getDecimalPlaces,
-  isEqualPrice
+  isEqualPrice,
+  filterByTimeInterval,
 };
