@@ -1,6 +1,4 @@
 import moment from 'moment-timezone';
-import glob from 'glob';
-import fs from 'fs';
 import { DATETIME, DATETIME_FILENAME, MomentTimeInterval } from '@solstice.sebastian/constants';
 
 /**
@@ -30,18 +28,6 @@ const getPercentDiff = (start: number, end: number, digits = 10): number => {
 };
 
 const nicePercent = (percent: number, digits: number = 2): string => `${(percent * 100).toFixed(digits)}%`;
-
-const globDelete = (globStr: string): Promise<any> =>
-  new Promise((res, rej) => {
-    glob(globStr, (err, files) => {
-      if (err) {
-        rej(err);
-      } else {
-        files.forEach(fs.unlinkSync);
-        res();
-      }
-    });
-  });
 
 const noop = (args?: any): any => {};
 
@@ -161,7 +147,6 @@ export {
   noop,
   datetime,
   datetimeForFilename,
-  globDelete,
   msToDatetime,
   nicePercent,
   toQueryString,
