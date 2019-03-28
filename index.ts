@@ -1,5 +1,6 @@
 import moment from 'moment-timezone';
 import { DATETIME, DATETIME_FILENAME, MomentTimeInterval } from '@solstice.sebastian/constants';
+import HumanTime from '@aricallen/human-time';
 
 /**
  * @param price {Number}
@@ -34,6 +35,7 @@ const noop = (args?: any): any => {};
 const datetimeForFilename = (): string => moment().format(DATETIME_FILENAME);
 const datetime = (): string => moment().format(DATETIME);
 const msToDatetime = (ms: number): string => moment(ms).tz('America/Los_Angeles').format(DATETIME);
+const msToHumanTime = (ms: number): string => HumanTime(ms).toString();
 
 const toQueryString = (obj: any): string => {
   let str = '';
@@ -158,4 +160,5 @@ export {
   getDecimalPlaces,
   isEqualPrice,
   filterByTimeInterval,
+  msToHumanTime,
 };
