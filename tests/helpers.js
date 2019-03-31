@@ -9,6 +9,9 @@ const {
   msToDatetime,
   toSatoshi,
   isEqualPrice,
+  roundTimestamp,
+  roundDatetime,
+  capitalize,
 } = require('../dist/index.js');
 
 test(`modByPercent`, (t) => {
@@ -103,7 +106,7 @@ test(`msToDatetime`, (t) => {
   t.end();
 });
 
-test.only(`isEqualPrice`, (t) => {
+test(`isEqualPrice`, (t) => {
   t.true(isEqualPrice(4, 4));
   t.true(isEqualPrice('4', '4'));
   t.true(isEqualPrice(4, '4'));
@@ -122,5 +125,46 @@ test.only(`isEqualPrice`, (t) => {
   });
   t.false(isEqualPrice(4.123456782, 4.123456789));
   t.false(isEqualPrice('4.123456782', '4.123456789'));
+  t.end();
+});
+
+test(`capitalize`, (t) => {
+  t.equal(capitalize('some str'), 'Some str');
+  t.end();
+});
+
+test(`roundTimestamp`, (t) => {
+  t.plan(4);
+  const input = new Date('2019-03-05 12:33:41').getTime();
+  t.equal(
+    roundTimestamp(input, 'seconds', 10),
+    new Date('2019-03-05 12:33:40').getTime(),
+    'round 10 seconds'
+  );
+  t.equal(
+    roundTimestamp(input, 'seconds', 30),
+    new Date('2019-03-05 12:33:30').getTime(),
+    'round 30 seconds'
+  );
+  t.equal(
+    roundTimestamp(input, 'minutes', 10),
+    new Date('2019-03-05 12:30:00').getTime(),
+    'round 10 mins'
+  );
+  t.equal(
+    roundTimestamp(input, 'hours', 1),
+    new Date('2019-03-05 12:00:00').getTime(),
+    'round 1 hour'
+  );
+  t.end();
+});
+
+test(`roundDatetime`, (t) => {
+  t.plan(4);
+  const input = new Date('2019-03-05 12:33:41');
+  t.equal(roundDatetime(input, 'seconds', 10), '2019-03-05 12:33:40', 'round 10 seconds');
+  t.equal(roundDatetime(input, 'seconds', 30), '2019-03-05 12:33:30', 'round 30 seconds');
+  t.equal(roundDatetime(input, 'minutes', 10), '2019-03-05 12:30:00', 'round 10 mins');
+  t.equal(roundDatetime(input, 'hours', 1), '2019-03-05 12:00:00', 'round 1 hour');
   t.end();
 });

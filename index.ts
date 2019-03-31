@@ -10,6 +10,8 @@ const modByPercent = (price: number, mod: number, digits: number = 10): number =
 
 const rand = (min: number, max: number): number => Math.random() * (max - min) + min;
 
+const capitalize = (input: string) => `${input[0].toUpperCase()}${input.split('').filter((_, i) => i > 0).join('')}`;
+
 /**
  * @param start {Number}
  * @param end {Number}
@@ -36,6 +38,28 @@ const datetimeForFilename = (): string => moment().format(DATETIME_FILENAME);
 const datetime = (): string => moment().format(DATETIME);
 const msToDatetime = (ms: number): string => moment(ms).tz('America/Los_Angeles').format(DATETIME);
 const msToHumanTime = (ms: number): string => HumanTime(ms).toString();
+
+const roundTimestamp = (ms: number, unit: string = 'seconds', amount: number = 10) => {
+  const date = new Date(ms);
+  switch (unit.toLowerCase()) {
+    case 'seconds':
+      return date.setSeconds(Math.round(date.getSeconds() / amount) * amount);
+    case 'minutes':
+      date.setSeconds(0);
+      return date.setMinutes(Math.round(date.getMinutes() / amount) * amount);
+    case 'hours':
+      date.setSeconds(0);
+      date.setMinutes(0);
+      return date.setHours(Math.round(date.getHours() / amount) * amount);
+    default:
+      return ms;
+  }
+};
+
+const roundDatetime = (datetime: string, unit: string = 'seconds', amount: number = 10) => {
+  const timestamp = new Date(datetime).getTime();
+  return msToDatetime(roundTimestamp(timestamp, unit, amount));
+};
 
 const toQueryString = (obj: any): string => {
   let str = '';
@@ -149,6 +173,8 @@ export {
   noop,
   datetime,
   datetimeForFilename,
+  roundTimestamp,
+  roundDatetime,
   msToDatetime,
   nicePercent,
   toQueryString,
@@ -161,4 +187,5 @@ export {
   isEqualPrice,
   filterByTimeInterval,
   msToHumanTime,
+  capitalize,
 };
