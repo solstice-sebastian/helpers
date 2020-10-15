@@ -4,7 +4,6 @@ dist/
 local/
 .env
 .vscode/
-yarn.lock
 logs/
 *.log
 *.zip

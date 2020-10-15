@@ -1,6 +1,6 @@
 {
   "name": "@solstice.sebastian/helpers",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,6 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
-    "@aricallen/human-time": "^1.1.0",
     "@solstice.sebastian/constants": "^3.2.3",
     "@types/glob": "^7.1.1",
     "@types/moment-timezone": "^0.5.9",
